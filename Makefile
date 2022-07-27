@@ -1,7 +1,7 @@
 DOCKER_IMAGE=arkaitzj/dev
 
 build:
-	docker build -t ${DOCKER_IMAGE} --target dev --build-arg user=arkaitzj . 
+	docker build -t ${DOCKER_IMAGE} --target dev .
 
 run:
 	docker run -it --rm ${DOCKER_IMAGE}

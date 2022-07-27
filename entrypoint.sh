@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Container expects users to mount things at /workdir and /var/run/docker.sock appropriately
+# Entrypoint takes care of 
+# * Mapping container-user uid to whatever uid the volume mounted at /workdir has
+# * Mapping docker group to whatever gid the mounted /var/run/docker.sock has
+
 function main() {
     echo "Booting for $devuser..."
     USER_UID=$(id -u $devuser)
@@ -12,7 +17,7 @@ function main() {
         echo "Chowning back user home"
         chown -R $devuser.$devuser /home/$devuser
     else
-        echo "/workdir has the same uid as $devuser, probably not bind-mounted"
+        echo "/workdir has the same uid as $devuser, probably not bind-mounted so not touching $devuser uid"
     fi
 
     if [ -f /var/run/docker.sock ]; then
@@ -22,9 +27,6 @@ function main() {
     else
         echo "No docker socket found mounted, not touching docker group.."
     fi
-
-
-
 
 
     if [ -n "$*" ]; then

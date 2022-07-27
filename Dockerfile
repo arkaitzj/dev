@@ -8,7 +8,7 @@ RUN go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 
 FROM alpine:3.15 as dev
 
-ARG user
+ARG user=arkaitzj
 ENV devuser $user
 
 RUN apk add bind-tools curl tcpdump git make vim docker bash
