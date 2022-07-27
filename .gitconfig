@@ -1,0 +1,14 @@
+[alias]
+  co = checkout
+  b  = branch
+  ci = commit
+  st = status
+  old-branches = "branch --sort=-committerdate --format='%(HEAD) %(color:cyan bold)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'"
+  prco     = "!f() { git fetch -fu ${2:-$(git remote |grep ^upstream || echo origin)} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
+  prls     = "!f() { remote=${1:-$(git remote |grep ^upstream || echo origin)}; git ls-remote $remote refs/pull/*/merge; }; f"
+  lineage  = "!f() { lineage=${1%/*}; headbranch=${1#*/}; git branch --merged $lineage/$headbranch --format='%(refname:short)'| grep  '^'$lineage; }; f"
+
+[pull]
+	rebase = false
+[init]
+	defaultBranch = main

@@ -33,6 +33,8 @@ RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --depth 1 --branch v0.
     echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
     echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
 
+COPY .gitconfig .gitconfig
+
 USER root
 COPY entrypoint.sh /entrypoint.sh
 
