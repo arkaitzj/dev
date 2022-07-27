@@ -20,7 +20,7 @@ function main() {
         echo "/workdir has the same uid as $devuser, probably not bind-mounted so not touching $devuser uid"
     fi
 
-    if [ -f /var/run/docker.sock ]; then
+    if [ -S /var/run/docker.sock ]; then
         DOCKER_GID=$(stat -c "%g" /var/run/docker.sock)
         echo "Adopting docker socket gid[${DOCKER_GID}] for docker group"
         sed -E -i "s/^docker:x:[0-9]+/docker:x:${DOCKER_GID}/" /etc/group
@@ -32,7 +32,7 @@ function main() {
     if [ -n "$*" ]; then
         su -l $devuser -c "$*"
     else
-        su - $devuser
+        su -l $devuser -c "/bin/bash"
     fi
 }
 
