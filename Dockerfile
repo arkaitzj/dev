@@ -14,7 +14,10 @@ ENV devuser $user
 RUN apk add bind-tools curl tcpdump git make vim docker bash sudo
 RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/wheel 
 
-RUN addgroup -S $user && adduser -s /bin/bash -S $user -G $user -G docker -G wheel
+RUN addgroup -S $user && \
+    adduser -s /bin/bash -S $user -G $user && \
+    adduser $user docker && \
+    adduser $user wheel
 
 RUN mkdir /workdir && chown -R $user.$user /workdir
 RUN ln -s /workdir /home/$user/workdir
@@ -31,7 +34,11 @@ COPY --from=golang-builder /go/bin/grpcurl usr/bin/
 
 RUN git clone https://github.com/asdf-vm/asdf.git ~/.asdf --depth 1 --branch v0.10.2 && \
     echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc && \
-    echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
+    echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc && \
+    export PATH=${PATH}:$HOME/.asdf/bin && \
+    for tool in helm kustomize helmfile k3d kubectl; do \
+        asdf plugin add ${tool} && asdf install ${tool} latest; \
+    done
 
 COPY .gitconfig .gitconfig
 
